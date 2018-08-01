@@ -17,7 +17,7 @@
         </encoder>
     </appender>
 
-    <logger name="cr.downloader" level="TRACE"/>
+    <logger name="beldon.maven" level="INFO"/>
     <logger name="org.springframework" level="WARN"/>
 
     <root level="ERROR">
