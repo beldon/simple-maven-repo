@@ -1,2 +1,25 @@
 server:
   port: 9999
+
+maven:
+  pass: root
+  user: root
+  context-path: /maven
+  repos:
+  - id: release
+    name: release
+    type: hosted
+  - id: snapshots
+    name: snapshots
+    type: hosted
+  - id: proxy
+    name: proxy
+    type: proxy
+    proxy-url: http://maven.aliyun.com/nexus/content/groups/public/
+  - id: public
+    name: public
+    type: group
+    group:
+    - proxy
+    - release
+    - snapshots

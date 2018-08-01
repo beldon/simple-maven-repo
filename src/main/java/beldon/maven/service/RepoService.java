@@ -1,0 +1,27 @@
+package beldon.maven.service;
+
+import beldon.maven.bean.RepositoryData;
+import beldon.maven.exception.RepoFileNotFoundException;
+import beldon.maven.exception.RepoNotFoundException;
+
+import java.io.File;
+
+public interface RepoService {
+
+    /**
+     * 根据仓库id获取仓库
+     *
+     * @param id
+     * @return
+     */
+    RepositoryData getRepo(String id) throws RepoNotFoundException;
+
+    /**
+     * 获取文件
+     *
+     * @param repoId   仓库id
+     * @param filePath 文件路径
+     * @return
+     */
+    File getFile(String repoId, String filePath) throws RepoNotFoundException, RepoFileNotFoundException;
+}

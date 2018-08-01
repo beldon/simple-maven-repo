@@ -70,6 +70,19 @@
 		</repository>
 	</repositories>
 
+	<distributionManagement>
+		<repository>
+			<id>custom</id>
+			<name>custom</name>
+			<url>http://localhost:9999/maven</url>
+		</repository>
+		<snapshotRepository>
+			<id>custom</id>
+			<name>custom</name>
+			<url>http://localhost:9999/maven</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>

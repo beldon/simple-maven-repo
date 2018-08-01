@@ -1,7 +1,9 @@
 package beldon.maven.web.interceptors;
 
+import beldon.maven.bean.RequestResource;
 import beldon.maven.config.properties.MavenProperties;
 import beldon.maven.service.DownloadService;
+import beldon.maven.service.ResourseParseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StreamUtils;
@@ -13,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -21,15 +22,16 @@ import java.io.IOException;
  * @create 2018-08-01 18:21
  */
 @Slf4j
-public class DemoInterceptor implements HandlerInterceptor {
+public class MavenInterceptor implements HandlerInterceptor {
 
     @Autowired
     private MavenProperties mavenProperties;
 
-    private File root;
-
     @Autowired
     private DownloadService downloadService;
+
+    @Autowired
+    private ResourseParseService resourseParseService;
 
     @PostConstruct
     public void init() {
@@ -42,30 +44,13 @@ public class DemoInterceptor implements HandlerInterceptor {
         if (!requestURI.startsWith(mavenProperties.getContextPath())) {
             return true;
         }
-
+        requestURI = requestURI.substring(mavenProperties.getContextPath().length());
         String method = request.getMethod();
-        System.out.println(method);
-        if (!method.toLowerCase().equals("get")) {
-            return true;
+        if (method.toLowerCase().equals("get")) {
+            //下载
+            RequestResource requestResource = resourseParseService.parseUri(requestURI);
+//            File targetFile =
         }
-
-        String filePath = requestURI.substring(mavenProperties.getContextPath().length());
-//        log.info("get file [{}]", filePath);
-//        File file = new File(getRoot(), filePath);
-//        if (!file.exists()) {
-//            String url = mavenProperties.getProxy() + filePath;
-//            try {
-//                downloadService.download(url, file);
-//            } catch (IOException e) {
-//                log.error("download file error", e);
-//                return false;
-//            }
-//        }
-//        try {
-//            downloadFile(request, response, file);
-//        } catch (IOException e) {
-//            log.error("download file error", e);
-//        }
         return false;
     }
 
@@ -81,11 +66,5 @@ public class DemoInterceptor implements HandlerInterceptor {
 
     }
 
-    private File getRoot() {
-        if (root == null) {
-            root = new File("./maven");
-        }
-        return root;
-    }
 
 }
