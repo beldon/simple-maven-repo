@@ -1,6 +1,8 @@
 package beldon.maven.config;
 
-import beldon.maven.web.interceptors.DemoInterceptor;
+import beldon.maven.config.properties.MavenProperties;
+import beldon.maven.web.interceptors.MavenInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,13 +14,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private MavenProperties mavenProperties;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(demoInterceptor());
+        String contextPath = mavenProperties.getContextPath();
+        registry.addInterceptor(mavenInterceptor()).addPathPatterns(contextPath + "/**");
     }
 
     @Bean
-    public DemoInterceptor demoInterceptor() {
-        return new DemoInterceptor();
+    public MavenInterceptor mavenInterceptor() {
+        return new MavenInterceptor();
     }
 }

@@ -11,10 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StreamUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +65,8 @@ public class RepoServiceImpl implements RepoService {
     @Override
     public File getFile(String repoId, String filePath) throws RepoNotFoundException, RepoFileNotFoundException {
         RepositoryData repo = getRepo(repoId);
-        File file = new File(localRepositoryDir, filePath);
+        File repoDir = new File(localRepositoryDir, repo.getId());
+        File file = new File(repoDir, filePath);
         if (file.exists()) {
             return file;
         }
@@ -95,5 +96,23 @@ public class RepoServiceImpl implements RepoService {
             throw new RepoFileNotFoundException(filePath + " not found");
         }
         return file;
+    }
+
+    @Override
+    public void saveFile(String repoId, String filePath, InputStream inputStream) throws RepoNotFoundException, IOException {
+        RepositoryData repo = getRepo(repoId);
+        File repoDir = new File(localRepositoryDir, repo.getId());
+        File file = new File(repoDir, filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        try (
+                FileOutputStream fos = new FileOutputStream(file)
+        ) {
+            StreamUtils.copy(inputStream, fos);
+        }
     }
 }

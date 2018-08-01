@@ -5,6 +5,9 @@ import beldon.maven.exception.RepoFileNotFoundException;
 import beldon.maven.exception.RepoNotFoundException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 public interface RepoService {
 
@@ -24,4 +27,14 @@ public interface RepoService {
      * @return
      */
     File getFile(String repoId, String filePath) throws RepoNotFoundException, RepoFileNotFoundException;
+
+
+    /**
+     * 保存文件
+     *
+     * @param repoId
+     * @param filePath
+     * @param inputStream
+     */
+    void saveFile(String repoId, String filePath, InputStream inputStream) throws RepoNotFoundException, IOException;
 }

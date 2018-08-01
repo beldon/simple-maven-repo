@@ -5,7 +5,7 @@
 
 	<groupId>beldon</groupId>
 	<artifactId>maven</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>maven</name>
@@ -28,7 +28,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<!--<version>1.1.1</version>-->
 		</dependency>
 
 		<dependency>
@@ -48,19 +47,13 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>com.alibaba</groupId>-->
-			<!--<artifactId>fastjson</artifactId>-->
-			<!--<version>1.2.49</version>-->
-		<!--</dependency>-->
-
 	</dependencies>
 
 	<repositories>
 		<repository>
 			<id>custom</id>
-			<name>custom</name>
-			<url>http://localhost:9999/maven</url>
+			<name>public</name>
+			<url>http://localhost:9999/maven/public</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -72,14 +65,14 @@
 
 	<distributionManagement>
 		<repository>
-			<id>custom</id>
-			<name>custom</name>
-			<url>http://localhost:9999/maven</url>
+			<id>custom-local</id>
+			<name>release</name>
+			<url>http://localhost:9999/maven/release</url>
 		</repository>
 		<snapshotRepository>
-			<id>custom</id>
-			<name>custom</name>
-			<url>http://localhost:9999/maven</url>
+			<id>custom-local</id>
+			<name>snapshots</name>
+			<url>http://localhost:9999/maven/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -88,6 +81,18 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
