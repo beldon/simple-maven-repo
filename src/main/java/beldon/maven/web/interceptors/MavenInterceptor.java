@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Base64;
+import java.util.Enumeration;
 
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -64,7 +65,7 @@ public class MavenInterceptor implements HandlerInterceptor {
                 log.info("[{}] file not found", e.getMessage());
                 response404(response);
             } catch (IOException e) {
-                log.error("get file error", e);
+                log.warn("get file error,{}", e.getMessage());
                 response404(response);
             }
         } else if (method.toLowerCase().equals("put")) {
@@ -85,8 +86,8 @@ public class MavenInterceptor implements HandlerInterceptor {
         response.setContentType(request.getServletContext().getMimeType(file.getName()));
         response.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
         try (
-                ServletOutputStream outputStream = response.getOutputStream();
-                FileInputStream fis = new FileInputStream(file)
+                FileInputStream fis = new FileInputStream(file);
+                ServletOutputStream outputStream = response.getOutputStream()
         ) {
             StreamUtils.copy(fis, outputStream);
         }
