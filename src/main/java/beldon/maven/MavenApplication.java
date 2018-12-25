@@ -3,6 +3,9 @@ package beldon.maven;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author Beldon
+ */
 @SpringBootApplication
 public class MavenApplication {
 

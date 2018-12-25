@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author Beldon
+ */
 @Data
 public class RepositoryData {
     /**

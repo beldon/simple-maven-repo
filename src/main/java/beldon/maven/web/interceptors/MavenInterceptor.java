@@ -21,15 +21,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Base64;
-import java.util.Enumeration;
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /**
  * @author Beldon
- * @create 2018-08-01 18:21
  */
 @Slf4j
 public class MavenInterceptor implements HandlerInterceptor {
@@ -52,7 +48,7 @@ public class MavenInterceptor implements HandlerInterceptor {
         requestURI = requestURI.substring(mavenProperties.getContextPath().length());
         String method = request.getMethod();
         RequestResource requestResource = resourseParseService.parseUri(requestURI);
-        if (method.toLowerCase().equals("get")) {
+        if (method.equalsIgnoreCase("get")) {
             log.info("get file [{}]", requestResource.getFilePath());
             //下载
             try {
@@ -68,7 +64,7 @@ public class MavenInterceptor implements HandlerInterceptor {
                 log.warn("get file error,{}", e.getMessage());
                 response404(response);
             }
-        } else if (method.toLowerCase().equals("put")) {
+        } else if (method.equalsIgnoreCase("put")) {
             //upload
             if (!isAuth(request.getHeader("authorization"))) {
                 response.setStatus(SC_UNAUTHORIZED);
@@ -111,10 +107,7 @@ public class MavenInterceptor implements HandlerInterceptor {
         String[] auth = new String(Base64.getDecoder().decode(authorization)).split(":");
         String user = auth[0];
         String pwd = auth[1];
-        if (mavenProperties.getUser().equals(user) && mavenProperties.getPass().equals(pwd)) {
-            return true;
-        }
-        return false;
+        return mavenProperties.getUser().equals(user) && mavenProperties.getPass().equals(pwd);
     }
 
 }

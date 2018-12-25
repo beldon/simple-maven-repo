@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Beldon
+ */
 @Service
 @Slf4j
 public class RepoServiceImpl implements RepoService {
@@ -104,7 +107,9 @@ public class RepoServiceImpl implements RepoService {
         File repoDir = new File(localRepositoryDir, repo.getId());
         File file = new File(repoDir, filePath);
         if (file.exists()) {
-            file.delete();
+            if (file.delete()) {
+                throw new RuntimeException("delete file error," + file.getAbsolutePath());
+            }
         }
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();

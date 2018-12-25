@@ -4,12 +4,15 @@ import beldon.maven.bean.RequestResource;
 import beldon.maven.service.ResourseParseService;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Beldon
+ */
 @Service
 public class ResourceParseServiceImpl implements ResourseParseService {
     @Override
     public RequestResource parseUri(String requestUri) {
         String path = requestUri;
-        if (path.indexOf("/") == 0) {
+        if (path.contains("/")) {
             path = path.substring(1);
         }
         int i = path.indexOf("/");
