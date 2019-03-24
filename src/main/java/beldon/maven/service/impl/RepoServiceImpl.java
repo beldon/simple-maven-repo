@@ -108,7 +108,7 @@ public class RepoServiceImpl implements RepoService {
         RepositoryData repo = getRepo(repoId);
         File repoDir = new File(localRepositoryDir, repo.getId());
         File file = new File(repoDir, filePath);
-        Files.delete(file.toPath());
+        Files.deleteIfExists(file.toPath());
         file.getParentFile().mkdirs();
         try (
                 FileOutputStream fos = new FileOutputStream(file)

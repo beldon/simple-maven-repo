@@ -112,7 +112,7 @@ public class MavenInterceptor implements HandlerInterceptor {
     }
 
     private boolean isPutFile(HttpServletRequest request) {
-        return request.getMethod().equalsIgnoreCase(HttpMethod.GET.toString());
+        return request.getMethod().equalsIgnoreCase(HttpMethod.PUT.toString());
     }
 
 }
