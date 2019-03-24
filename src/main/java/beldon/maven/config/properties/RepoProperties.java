@@ -1,5 +1,6 @@
 package beldon.maven.config.properties;
 
+import beldon.maven.enums.RepoType;
 import lombok.Data;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class RepoProperties {
     /**
      * 类型，group（仓库组），hosted（宿主仓库），proxy（代理仓库）
      */
-    private String type = "hosted";
+    private RepoType type = RepoType.HOSTED;
 
     /**
      * 仓库路径，若为空，则与id相同

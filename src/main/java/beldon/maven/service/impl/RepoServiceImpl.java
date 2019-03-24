@@ -3,6 +3,7 @@ package beldon.maven.service.impl;
 import beldon.maven.bean.RepositoryData;
 import beldon.maven.config.properties.MavenProperties;
 import beldon.maven.config.properties.RepoProperties;
+import beldon.maven.enums.RepoType;
 import beldon.maven.exception.RepoFileNotFoundException;
 import beldon.maven.exception.RepoNotFoundException;
 import beldon.maven.service.DownloadService;
@@ -15,6 +16,7 @@ import org.springframework.util.StreamUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +76,7 @@ public class RepoServiceImpl implements RepoService {
             return file;
         }
 
-        if (repo.getType().equals("proxy")) {
+        if (repo.getType().equals(RepoType.PROXY)) {
             String url = repo.getProxyUrl() + filePath;
             try {
                 downloadService.download(url, file);
@@ -106,12 +108,8 @@ public class RepoServiceImpl implements RepoService {
         RepositoryData repo = getRepo(repoId);
         File repoDir = new File(localRepositoryDir, repo.getId());
         File file = new File(repoDir, filePath);
-        if (file.exists()) {
-            file.delete();
-        }
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
+        Files.delete(file.toPath());
+        file.getParentFile().mkdirs();
         try (
                 FileOutputStream fos = new FileOutputStream(file)
         ) {

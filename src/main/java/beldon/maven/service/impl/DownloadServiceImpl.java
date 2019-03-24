@@ -28,9 +28,7 @@ public class DownloadServiceImpl implements DownloadService {
         try (
                 InputStream is = connection.getInputStream();
         ) {
-            if (!savePath.getParentFile().exists()) {
-                savePath.getParentFile().mkdirs();
-            }
+            savePath.getParentFile().mkdirs();
             randomAccessFile = new RandomAccessFile(savePath, "rw");
             int length;
             byte[] buffer = new byte[1024];
