@@ -5,10 +5,12 @@ import beldon.maven.exception.RepoFileNotFoundException;
 import beldon.maven.exception.RepoNotFoundException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * @author beldon
+ */
 public interface RepoService {
 
     /**

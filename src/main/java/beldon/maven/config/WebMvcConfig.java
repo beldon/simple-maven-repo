@@ -10,13 +10,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author Beldon
- * @create 2018-08-01 18:19
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    private final MavenProperties mavenProperties;
+
     @Autowired
-    private MavenProperties mavenProperties;
+    public WebMvcConfig(MavenProperties mavenProperties) {
+        this.mavenProperties = mavenProperties;
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

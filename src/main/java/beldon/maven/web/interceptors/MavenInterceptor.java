@@ -4,11 +4,11 @@ import beldon.maven.bean.RequestResource;
 import beldon.maven.config.properties.MavenProperties;
 import beldon.maven.exception.RepoFileNotFoundException;
 import beldon.maven.exception.RepoNotFoundException;
-import beldon.maven.service.DownloadService;
 import beldon.maven.service.RepoService;
 import beldon.maven.service.ResourseParseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,24 +21,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Base64;
-import java.util.Enumeration;
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /**
  * @author Beldon
- * @create 2018-08-01 18:21
  */
 @Slf4j
 public class MavenInterceptor implements HandlerInterceptor {
 
     @Autowired
     private MavenProperties mavenProperties;
-
-    @Autowired
-    private DownloadService downloadService;
 
     @Autowired
     private ResourseParseService resourseParseService;
@@ -50,9 +43,8 @@ public class MavenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestURI = request.getRequestURI();
         requestURI = requestURI.substring(mavenProperties.getContextPath().length());
-        String method = request.getMethod();
         RequestResource requestResource = resourseParseService.parseUri(requestURI);
-        if (method.toLowerCase().equals("get")) {
+        if (isFetchFile(request)) {
             log.info("get file [{}]", requestResource.getFilePath());
             //下载
             try {
@@ -68,9 +60,9 @@ public class MavenInterceptor implements HandlerInterceptor {
                 log.warn("get file error,{}", e.getMessage());
                 response404(response);
             }
-        } else if (method.toLowerCase().equals("put")) {
+        } else if (isPutFile(request)) {
             //upload
-            if (!isAuth(request.getHeader("authorization"))) {
+            if (!isAuth(request)) {
                 response.setStatus(SC_UNAUTHORIZED);
                 log.info("unauthorized");
                 return false;
@@ -103,7 +95,8 @@ public class MavenInterceptor implements HandlerInterceptor {
         }
     }
 
-    private boolean isAuth(String authorization) {
+    private boolean isAuth(HttpServletRequest request) {
+        String authorization = request.getHeader("authorization");
         if (StringUtils.isEmpty(authorization)) {
             return false;
         }
@@ -111,10 +104,15 @@ public class MavenInterceptor implements HandlerInterceptor {
         String[] auth = new String(Base64.getDecoder().decode(authorization)).split(":");
         String user = auth[0];
         String pwd = auth[1];
-        if (mavenProperties.getUser().equals(user) && mavenProperties.getPass().equals(pwd)) {
-            return true;
-        }
-        return false;
+        return mavenProperties.getUser().equals(user) && mavenProperties.getPass().equals(pwd);
+    }
+
+    private boolean isFetchFile(HttpServletRequest request) {
+        return request.getMethod().equalsIgnoreCase(HttpMethod.GET.toString());
+    }
+
+    private boolean isPutFile(HttpServletRequest request) {
+        return request.getMethod().equalsIgnoreCase(HttpMethod.GET.toString());
     }
 
 }

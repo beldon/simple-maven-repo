@@ -19,19 +19,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author beldon
+ */
 @Service
 @Slf4j
 public class RepoServiceImpl implements RepoService {
 
     private final Map<String, RepositoryData> repositoryDataMap = new HashMap<>();
 
-    @Autowired
-    private MavenProperties mavenProperties;
-
-    @Autowired
-    private DownloadService downloadService;
-
+    private final MavenProperties mavenProperties;
+    private final DownloadService downloadService;
     private File localRepositoryDir;
+
+    @Autowired
+    public RepoServiceImpl(MavenProperties mavenProperties, DownloadService downloadService) {
+        this.mavenProperties = mavenProperties;
+        this.downloadService = downloadService;
+    }
 
     @PostConstruct
     public void initData() {
@@ -49,9 +54,7 @@ public class RepoServiceImpl implements RepoService {
             }
         }
         localRepositoryDir = new File(mavenProperties.getLocalRepository());
-        if (!localRepositoryDir.exists()) {
-            localRepositoryDir.mkdirs();
-        }
+        localRepositoryDir.mkdirs();
     }
 
     @Override

@@ -11,6 +11,9 @@ import java.io.RandomAccessFile;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * @author beldon
+ */
 @Service
 @Slf4j
 public class DownloadServiceImpl implements DownloadService {
