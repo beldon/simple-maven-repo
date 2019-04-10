@@ -15,7 +15,8 @@ maven:
   - id: aliyun
     name: aliyun
     type: proxy
-    proxy-url: http://maven.aliyun.com/nexus/content/groups/public/
+    proxy-url: http://192.168.99.135:8081/repository/maven-public/
+#    proxy-url: http://maven.aliyun.com/nexus/content/groups/public/
   - id: public
     name: public
     type: group

@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Base64;
+import java.util.Enumeration;
 
 import static javax.servlet.http.HttpServletResponse.*;
 
@@ -44,7 +45,28 @@ public class MavenInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         requestURI = requestURI.substring(mavenProperties.getContextPath().length());
         RequestResource requestResource = resourseParseService.parseUri(requestURI);
+        String authorization = request.getHeader("authorization");
+        System.out.println("----"+authorization);
+        System.out.println("---------------header-start---------------");
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String key = headerNames.nextElement();
+            System.out.println(key+":"+request.getHeader(key));
+        }
+        System.out.println("---------------header-end---------------");
+        System.out.println("---------------parameter-start---------------");
+        request.getParameterMap().forEach((k,v)->{
+            System.out.println(k + "->" + v[0]);
+        });
+        System.out.println("---------------parameter-end---------------");
         if (isFetchFile(request)) {
+            if (!isAuth(request)) {
+//                WWW-Authenticate
+                response.setStatus(SC_UNAUTHORIZED);
+                log.info("unauthorized");
+                response.setHeader("WWW-Authenticate","Basic realm=\"r1\"");
+                return false;
+            }
             log.info("get file [{}]", requestResource.getFilePath());
             //下载
             try {
@@ -97,6 +119,7 @@ public class MavenInterceptor implements HandlerInterceptor {
 
     private boolean isAuth(HttpServletRequest request) {
         String authorization = request.getHeader("authorization");
+        System.out.println("+++"+authorization);
         if (StringUtils.isEmpty(authorization)) {
             return false;
         }
